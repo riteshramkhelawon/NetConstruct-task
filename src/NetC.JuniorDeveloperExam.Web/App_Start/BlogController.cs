@@ -17,11 +17,11 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             //get the blog id from the url (in 32-bit integer format)
             var urlBlogID = Convert.ToInt32(Url.RequestContext.RouteData.Values["id"]);
             //get the directory of blog posts JSON file
-            var mappath = Server.MapPath("~/App_Data/Blog-Posts.json");
+            var mapPath = Server.MapPath("~/App_Data/Blog-Posts.json");
             //json file as string
-            var myJsonString = System.IO.File.ReadAllText(mappath);
+            var JsonString = System.IO.File.ReadAllText(mapPath);
             //string to object
-            JObject blogPosts = JObject.Parse(myJsonString);
+            JObject blogPosts = JObject.Parse(JsonString);
          
             //loop through each object in the JSON Object
             foreach (JObject blog in blogPosts["blogPosts"])
@@ -32,6 +32,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                 //if id in the url matches the current blogId, get blog details
                 if(blogId == urlBlogID)
                 {
+                    //get details from appropriate blog entry
                     var date = blog["date"];
                     var title = blog["title"];
                     var image = blog["image"];
@@ -45,9 +46,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     break;
                 }
 
-               
-
-               
+           
             }
 
             
