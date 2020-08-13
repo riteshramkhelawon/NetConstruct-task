@@ -15,7 +15,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
         public ActionResult BlogContent()
         {
             //get the blog id from the url (in 32-bit integer format)
-            var blogID = Convert.ToInt32(Url.RequestContext.RouteData.Values["id"]);
+            var urlBlogID = Convert.ToInt32(Url.RequestContext.RouteData.Values["id"]);
             //get the directory of blog posts JSON file
             var mappath = Server.MapPath("~/App_Data/Blog-Posts.json");
             //json file as string
@@ -23,40 +23,35 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             //string to object
             JObject blogPosts = JObject.Parse(myJsonString);
          
-            foreach (JObject post in blogPosts["blogPosts"])
+            //loop through each object in the JSON Object
+            foreach (JObject blog in blogPosts["blogPosts"])
             {
                 //convert JValue to integer
-                int postId = post["id"].ToObject<int>();
+                int blogId = blog["id"].ToObject<int>();
 
-                if(postId == blogID)
+                //if id in the url matches the current blogId, get blog details
+                if(blogId == urlBlogID)
                 {
-                    System.Diagnostics.Debug.WriteLine("blog title: " + post["title"]);
+                    var date = blog["date"];
+                    var title = blog["title"];
+                    var image = blog["image"];
+                    var htmlContent = blog["htmlContent"];
+
+                    System.Diagnostics.Debug.WriteLine("\nblog title: " + blog["title"] +
+                   "\ndate: " + blog["date"] +
+                   "\nimage: " + blog["image"] +
+                   "\ncontent: " + blog["htmlContent"]);
+
+                    break;
                 }
+
+               
+
+               
             }
 
             
 
-            JArray jsonArray = (JArray)blogPosts["blogPosts"];
-
-            
-
-
-            //foreach (JObject post in jsonArray)
-            //{
-            //    //System.Diagnostics.Debug.WriteLine("blog:");
-
-            //    foreach (var details in post.Properties())
-            //    {
-            //        System.Diagnostics.Debug.WriteLine(details["id"]);
-            //        //if (details == blogID)
-            //        //{
-            //        //    System.Diagnostics.Debug.WriteLine(details.Name + ":" + details.Value);
-            //        //}
-
-            //    }
-            //}
-
-            //System.Diagnostics.Debug.WriteLine("blog id: " + details);
 
             return View();
         }
