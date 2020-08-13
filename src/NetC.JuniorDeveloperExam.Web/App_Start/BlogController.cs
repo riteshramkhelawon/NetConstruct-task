@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,7 +14,50 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
         // GET: Blog
         public ActionResult BlogContent()
         {
-            System.Diagnostics.Debug.WriteLine("blog content page");
+            //get the blog id from the url (in 32-bit integer format)
+            var blogID = Convert.ToInt32(Url.RequestContext.RouteData.Values["id"]);
+            //get the directory of blog posts JSON file
+            var mappath = Server.MapPath("~/App_Data/Blog-Posts.json");
+            //json file as string
+            var myJsonString = System.IO.File.ReadAllText(mappath);
+            //string to object
+            JObject blogPosts = JObject.Parse(myJsonString);
+         
+            foreach (JObject post in blogPosts["blogPosts"])
+            {
+                //convert JValue to integer
+                int postId = post["id"].ToObject<int>();
+
+                if(postId == blogID)
+                {
+                    System.Diagnostics.Debug.WriteLine("blog title: " + post["title"]);
+                }
+            }
+
+            
+
+            JArray jsonArray = (JArray)blogPosts["blogPosts"];
+
+            
+
+
+            //foreach (JObject post in jsonArray)
+            //{
+            //    //System.Diagnostics.Debug.WriteLine("blog:");
+
+            //    foreach (var details in post.Properties())
+            //    {
+            //        System.Diagnostics.Debug.WriteLine(details["id"]);
+            //        //if (details == blogID)
+            //        //{
+            //        //    System.Diagnostics.Debug.WriteLine(details.Name + ":" + details.Value);
+            //        //}
+
+            //    }
+            //}
+
+            //System.Diagnostics.Debug.WriteLine("blog id: " + details);
+
             return View();
         }
 
