@@ -9,8 +9,9 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
     public class BlogController : Controller
     {
         // GET: Blog
-        public ActionResult Index()
+        public ActionResult BlogContent()
         {
+            System.Diagnostics.Debug.WriteLine("blog content page");
             return View();
         }
 
