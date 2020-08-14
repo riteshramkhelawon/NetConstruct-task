@@ -32,11 +32,11 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                 //if id in the url matches the current blogId, get blog details
                 if(blogId == urlBlogID)
                 {
-                    //get details from appropriate blog entry
-                    var date = blog["date"];
-                    var title = blog["title"];
-                    var image = blog["image"];
-                    var htmlContent = blog["htmlContent"];
+                    //get details from appropriate blog entry [MAKE THESE INTO A SINGLE OBJECT]
+                    ViewBag.date = blog["date"];
+                    ViewBag.title = blog["title"];
+                    ViewBag.image = blog["image"];
+                    ViewBag.htmlContent = blog["htmlContent"];
 
                     System.Diagnostics.Debug.WriteLine("\nblog title: " + blog["title"] +
                    "\ndate: " + blog["date"] +
@@ -45,12 +45,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
 
                     break;
                 }
-
-           
             }
-
-            
-
 
             return View();
         }
