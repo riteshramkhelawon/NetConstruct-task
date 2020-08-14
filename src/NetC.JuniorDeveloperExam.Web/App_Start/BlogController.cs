@@ -37,11 +37,14 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     ViewBag.title = blog["title"];
                     ViewBag.image = blog["image"];
                     ViewBag.htmlContent = blog["htmlContent"];
+                    ViewBag.comments = blog["comments"];
+                    
 
                     System.Diagnostics.Debug.WriteLine("\nblog title: " + blog["title"] +
                    "\ndate: " + blog["date"] +
                    "\nimage: " + blog["image"] +
-                   "\ncontent: " + blog["htmlContent"]);
+                   "\ncontent: " + blog["htmlContent"] + 
+                   "\ncomments: " + blog["comments"]);
 
                     break;
                 }

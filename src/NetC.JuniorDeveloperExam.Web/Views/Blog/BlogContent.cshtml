@@ -3,19 +3,54 @@
 }
 
 <!DOCTYPE html>
-<body>     
+<body>
     <h1 class="mt-4">@ViewBag.title</h1>
 
     <hr>
-     
+
     <p>Posted on @ViewBag.date.ToString("dd-MM-yyyy")</p>
 
     <hr>
-    
+
     <img class="img-fluid rounded" src="@ViewBag.image" alt="@ViewBag.title">
 
     <hr>
     @Html.Raw(@ViewBag.htmlContent)
     <hr>
+    <h2>Blog post comments</h2>
+    @if (ViewBag.comments != null)
+    {
+        foreach (var comment in ViewBag.comments)
+        {
+            <div class="media mb-4">
+                <img class="d-flex mr-3 rounded-circle user-avatar" src="https://eu.ui-avatars.com/api/?name=Steven+Barker" alt="Steven Barker">
+                <div class="media-body">
+                    <h5 class="mt-0">Steven Barker <small><em>(November 11, 2019 - 20:44)</em></small></h5>
+                    Sed vel odio consequat, elementum massa quis, lobortis est. Nulla egestas congue dolor, sit amet fermentum massa dignissim sit amet. In vestibulum iaculis egestas.
+                </div>
+            </div>
+        }
+    } else
+    {
+        <p>There are no comments yet</p>
+    }
+
+
+
+    @*<div class="media mb-4">
+            <img class="d-flex mr-3 rounded-circle user-avatar" src="https://eu.ui-avatars.com/api/?name=Chetan+Mistry" alt="Chetan Mistry">
+            <div class="media-body">
+                <h5 class="mt-0">Chetan Mistry <small><em>(November 11, 2019 - 20:44)</em></small></h5>
+                Nam vel aliquet nulla, ac tempor ex. Suspendisse sit amet sollicitudin ex, vel placerat ipsum. Duis vitae fermentum eros. In maximus maximus purus, et volutpat eros rutrum et. Nulla fringilla at massa vel varius. In tristique egestas nisl, vitae elementum orci fringilla quis. Ut rutrum mauris erat, a rhoncus orci posuere non. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+            </div>
+        </div>
+
+        <div class="media mb-4">
+            <img class="d-flex mr-3 rounded-circle user-avatar" src="https://eu.ui-avatars.com/api/?name=Chris+Grey" alt="Chris Grey">
+            <div class="media-body">
+                <h5 class="mt-0">Chris Grey <small><em>(November 11, 2019 - 20:44)</em></small></h5>
+                Integer volutpat, sapien eu dapibus sodales, ipsum arcu dapibus elit, ac faucibus mi ligula suscipit mauris.
+            </div>
+        </div>*@
 </body>
 
