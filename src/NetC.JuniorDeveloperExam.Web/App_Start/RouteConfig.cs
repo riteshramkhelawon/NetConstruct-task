@@ -12,14 +12,20 @@ namespace NetC.JuniorDeveloperExam.Web
             //routes.MapRoute(
             //    name: "default",
             //    url: "{controller}/{action}/{id}",
-            //    defaults: new { controller = "Blog", action = "BlogContent", id = UrlParameter.Optional }
+            //    defaults: new { controller = "Blog", action = "BlogContent", id = "1" }
             //);
 
             routes.MapRoute(
-            name: "blogContent",
-            url: "blog/{id}",
-            defaults: new { controller = "Blog", action = "BlogContent", id = UrlParameter.Optional }
-        );
+                name: "home",
+                url: "",
+                defaults: new { controller = "Blog", action = "BlogContent", id = 1 }
+            );
+
+            routes.MapRoute(
+                name: "blogContent",
+                url: "blog/{id}",
+                defaults: new { controller = "Blog", action = "BlogContent", id = UrlParameter.Optional }
+            );
 
         }
     }
