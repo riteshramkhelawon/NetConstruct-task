@@ -13,9 +13,36 @@
     <hr>
     @Html.Raw(@ViewBag.htmlContent)
     <hr>
+    
+    <!-- Blog Post Comment Form -->
+    <div class="card my-4">
+        <h5 class="card-header">Leave a Comment</h5>
+        <div class="card-body">
+            <form>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="Name">Name</label>
+                        <input type="text" class="form-control" id="Name" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="EmailAddress">Email Address</label>
+                        <input type="email" class="form-control" id="emailAddress" placeholder="Your email address" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Message">Message</label>
+                    <textarea placeholder="What's your thoughts?" id="message" class="form-control" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
+        </div>
+    </div>
+
+    <hr />
 
     <!-- Blog post comments -->
-    <h2>Blog post comments</h2>
+    <h2>Comments</h2>
     @if (ViewBag.comments != null)
     {
         foreach (var comment in ViewBag.comments)
@@ -28,7 +55,8 @@
                 </div>
             </div>
         }
-    } else
+    }
+    else
     {
         <p>There are no comments yet</p>
     }
