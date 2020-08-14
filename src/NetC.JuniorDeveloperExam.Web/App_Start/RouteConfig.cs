@@ -17,15 +17,15 @@ namespace NetC.JuniorDeveloperExam.Web
 
             routes.MapRoute(
                 name: "addComment",
-                url: "{controller}/AddComment",
+                url: "blog/AddComment",
                 defaults: new { controller = "Blog", action = "AddComment"}
             );
 
-            routes.MapRoute(
-                name: "home",
-                url: "",
-                defaults: new { controller = "Blog", action = "BlogContent", id = 1 }
-            );
+            //routes.MapRoute(
+            //    name: "home",
+            //    url: "",
+            //    defaults: new { controller = "blog", action = "blogcontent", id = 1 }
+            //);
 
             routes.MapRoute(
                 name: "blogContent",
