@@ -14,6 +14,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
         // GET: Blog
         public ActionResult BlogContent()
         {
+            System.Diagnostics.Debug.WriteLine("id val: " + Url.RequestContext.RouteData.Values["id"]);
             //get the blog id from the url (in 32-bit integer format)
             var urlBlogID = Convert.ToInt32(Url.RequestContext.RouteData.Values["id"]);
             //get the directory of blog posts JSON file
@@ -22,7 +23,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             var JsonString = System.IO.File.ReadAllText(mapPath);
             //string to object
             JObject blogPosts = JObject.Parse(JsonString);
-         
+
             //loop through each object in the JSON Object
             foreach (JObject blog in blogPosts["blogPosts"])
             {
@@ -30,28 +31,30 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                 int blogId = blog["id"].ToObject<int>();
 
                 //if id in the url matches the current blogId, get blog details
-                if(blogId == urlBlogID)
+                if (blogId == urlBlogID)
                 {
                     //get details from appropriate blog entry [MAKE THESE INTO A SINGLE OBJECT]
+                    ViewBag.blogID = urlBlogID;
                     ViewBag.date = blog["date"];
                     ViewBag.title = blog["title"];
                     ViewBag.image = blog["image"];
                     ViewBag.htmlContent = blog["htmlContent"];
                     ViewBag.comments = blog["comments"];
-                    
-
-                    System.Diagnostics.Debug.WriteLine("\nblog title: " + blog["title"] +
-                   "\ndate: " + blog["date"] +
-                   "\nimage: " + blog["image"] +
-                   "\ncontent: " + blog["htmlContent"] + 
-                   "\ncomments: " + blog["comments"]);
 
                     break;
                 }
             }
-
+            
             return View();
         }
+
+        //public ActionResult AddComment()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("add comment action");
+
+
+        //    return View("~/Views/BlogContent.cshtml");
+        //}
 
         // GET: Blog/Details/5
         public ActionResult Details(int id)
@@ -67,13 +70,17 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
 
         // POST: Blog/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult AddComment(FormCollection commentData)
         {
+            System.Diagnostics.Debug.WriteLine("add comment action");
+            System.Diagnostics.Debug.WriteLine("name: " + commentData["name"]);
             try
             {
-                // TODO: Add insert logic here
+                
 
-                return RedirectToAction("Index");
+
+                //redirect to the currently viewed blog post
+                return RedirectToAction("BlogContent", new { id = commentData["blogId"] });
             }
             catch
             {
