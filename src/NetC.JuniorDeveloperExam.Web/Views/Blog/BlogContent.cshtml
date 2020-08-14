@@ -18,23 +18,24 @@
     <div class="card my-4">
         <h5 class="card-header">Leave a Comment</h5>
         <div class="card-body">
-            <form>
+            <form method="post" action="AddComment">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="Name">Name</label>
-                        <input type="text" class="form-control" id="Name" placeholder="Your name" required>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Your name" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="EmailAddress">Email Address</label>
-                        <input type="email" class="form-control" id="emailAddress" placeholder="Your email address" required>
+                        <input type="text" class="form-control" name="emailAddress" id="emailAddress" placeholder="Your email address" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="Message">Message</label>
-                    <textarea placeholder="What's your thoughts?" id="message" class="form-control" rows="3" required></textarea>
+                    <textarea placeholder="What's your thoughts?" name="message" id="message" class="form-control" rows="3" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Post Comment</button>
+                <input type="hidden" name="blogId" id="blogID" value="@ViewBag.blogID" />
             </form>
         </div>
     </div>
