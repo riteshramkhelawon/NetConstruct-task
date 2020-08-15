@@ -14,7 +14,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
         // GET: Blog
         public ActionResult BlogContent()
         {
-            System.Diagnostics.Debug.WriteLine("id val: " + Url.RequestContext.RouteData.Values["id"]);
+           
             //get the blog id from the url (in 32-bit integer format)
             var urlBlogID = Convert.ToInt32(Url.RequestContext.RouteData.Values["id"]);
             //get the directory of blog posts JSON file
@@ -44,17 +44,13 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     break;
                 }
             }
-
             return View();
         }
-
 
         // POST: Blog/Create
         [HttpPost]
         public ActionResult AddComment(FormCollection commentData)
         {
-            System.Diagnostics.Debug.WriteLine("add comment action");
-
             //get user inputs from the comment form
             String name = commentData["name"];
             DateTime date = DateTime.Now;
@@ -80,15 +76,12 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     {
                         if ((JArray)blogPost["comments"] == null)
                         {
-                            System.Diagnostics.Debug.WriteLine("no comments yet");
                             //create new comment object
                             Comment newComment = new Comment(name, date, emailAddress, message);
                             //create array with the new comment as an element
                             Comment[] comments = new Comment[] { newComment };
-                            System.Diagnostics.Debug.WriteLine("new comment: " + newComment.message);
                             //add newComment to the comment array
                             blogPost.Property("htmlContent").AddAfterSelf(new JProperty("comments", JToken.FromObject(comments)));
-                            System.Diagnostics.Debug.WriteLine(blogPost.ToString());
                         }
                         else
                         {
@@ -96,11 +89,8 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                             JArray comments = (JArray)blogPost["comments"];
                             //create new comment object
                             Comment newComment = new Comment(name, date, emailAddress, message);
-                            System.Diagnostics.Debug.WriteLine("new comment: " + newComment.message);
                             //add newComment to the comment array
                             comments.Add(JToken.FromObject(newComment));
-
-                            System.Diagnostics.Debug.WriteLine("comments: " + comments.ToString());
                         }
 
                     }
