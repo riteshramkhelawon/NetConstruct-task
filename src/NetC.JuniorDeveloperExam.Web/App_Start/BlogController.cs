@@ -114,6 +114,15 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             }
         }
 
+        public ActionResult addCommentReply(FormCollection replyData)
+        {
+            System.Diagnostics.Debug.WriteLine("add reply - "+replyData["blogId"]);
+            return RedirectToAction("BlogContent", new { id = replyData["blogId"] });
+        }
+
+
+
+
         [HttpPost]
         public Boolean checkEmail()
         {

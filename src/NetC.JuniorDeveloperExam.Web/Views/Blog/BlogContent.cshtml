@@ -62,7 +62,7 @@
                 </div>
 
                 <div style="display:none" class="mb-2 m-5" id="replyForm-@i">
-                    <form>
+                    <form method="post" action="addCommentReply">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="Name">Name</label>
@@ -78,6 +78,7 @@
                             <textarea placeholder="Your reply" name="commentReply" id="commentReply" class="form-control" rows="1" required></textarea>
                         </div>
                         <button id="submitCommentBtn" type="submit" class="btn btn-outline-secondary">Post Reply</button>
+                        <input type="hidden" name="blogId" id="blogID" value="@ViewBag.blogID" />
                     </form>
                 </div>
                 <hr />
