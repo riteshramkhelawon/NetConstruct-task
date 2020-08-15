@@ -36,8 +36,12 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     ViewBag.image = blog["image"];
                     ViewBag.htmlContent = blog["htmlContent"];
                     ViewBag.comments = blog["comments"];
-
+                    ViewBag.blogFound = true;
                     break;
+                }
+                else
+                {
+                    ViewBag.blogFound = false;
                 }
             }
             return View();
