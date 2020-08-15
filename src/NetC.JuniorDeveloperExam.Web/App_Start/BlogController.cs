@@ -97,21 +97,34 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     //if blogId in json and blog post id are equal
                     if (blogPostId == blogIdToAddComment)
                     {
-                        //get comments array from json for that blog post
-                        JArray comments = (JArray)blogPost["comments"];
-                        //create new comment object
-                        Comment newComment = new Comment(name, date, emailAddress, message);
-                        System.Diagnostics.Debug.WriteLine("new comment: " + newComment.message);
-                        //add newComment to the com
-                        comments.Add(JToken.FromObject(newComment));
+                        if ((JArray)blogPost["comments"] == null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("no comments yet");
+                            //create new comment object
+                            Comment newComment = new Comment(name, date, emailAddress, message);
+                            //create array with the new comment as an element
+                            Comment[] comments = new Comment[] { newComment };
+                            System.Diagnostics.Debug.WriteLine("new comment: " + newComment.message);
+                            //add newComment to the comment array
+                            blogPost.Property("htmlContent").AddAfterSelf(new JProperty("comments", JToken.FromObject(comments)));
+                            System.Diagnostics.Debug.WriteLine(blogPost.ToString());
+                        } else
+                        {
+                            //get comments array from json for that blog post
+                            JArray comments = (JArray)blogPost["comments"];
+                            //create new comment object
+                            Comment newComment = new Comment(name, date, emailAddress, message);
+                            System.Diagnostics.Debug.WriteLine("new comment: " + newComment.message);
+                            //add newComment to the comment array
+                            comments.Add(JToken.FromObject(newComment));
                       
-                        System.Diagnostics.Debug.WriteLine("comments: " + comments.ToString());
+                            System.Diagnostics.Debug.WriteLine("comments: " + comments.ToString());
+                        }
+                        
                     }
                    
                 }
 
-                System.Diagnostics.Debug.WriteLine("comments: " + jsonObj.ToString());
-                
                 System.IO.File.WriteAllText(mapPath, jsonObj.ToString());
 
                 //redirect to the currently viewed blog post
