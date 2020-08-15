@@ -9,7 +9,7 @@
          <!-- Blog Post Content -->
         <h1 class="mt-4">@ViewBag.title</h1>
         <hr>
-        <p>Posted on  @String.Format("{0:dd/MM/yyyy}", ViewBag.date)</p>
+        <p>Posted on  @String.Format("{0:dddd d MMMM yyyy}", ViewBag.date)</p>
         <hr>
         <img class="img-fluid rounded" src="@ViewBag.image" alt="@ViewBag.title">
         <hr>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="EmailAddress">Email Address</label>
-                            <input type="text" class="form-control" name="emailAddress" id="emailAddress" placeholder="Your email address" required>
+                            <input type="email" class="form-control" name="emailAddress" id="emailAddress" placeholder="Your email address" required>
                         </div>
                     </div>
 
@@ -53,7 +53,7 @@
                 <div class="media mb-4">
                     <img class="d-flex mr-3 rounded-circle user-avatar" src="" alt=@comment.name>
                     <div class="media-body">
-                        <h5 class="mt-0"><strong>@comment.name</strong><small><em> (@String.Format("{0:dd/MM/yyyy}", @comment.date) at @comment.date.ToString("HH:mm")) </em></small></h5>
+                        <h5 class="mt-0"><strong>@comment.name</strong><small><em> (@String.Format("{0:d MMMM yyyy}", @comment.date) at @comment.date.ToString("HH:mm")) </em></small></h5>
                         @comment.message
                     </div>
                 </div>
