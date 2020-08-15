@@ -79,22 +79,49 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             DateTime date = DateTime.Now;
             String emailAddress = commentData["emailAddress"];
             String message = commentData["message"];
+            int blogIdToAddComment = Int32.Parse(commentData["blogId"]);
 
             try
             {
-                System.Diagnostics.Debug.WriteLine("name: " + name);
-                System.Diagnostics.Debug.WriteLine("date: " + date.ToString());
-                System.Diagnostics.Debug.WriteLine("email: " + emailAddress);
-                System.Diagnostics.Debug.WriteLine("msg: " + message);
+                //get the directory of blog posts JSON file
+                var mapPath = Server.MapPath("~/App_Data/Blog-Posts.json");
+                //json file as string
+                var JsonString = System.IO.File.ReadAllText(mapPath);
+                //json string --> JObject
+                JObject jsonObj = JObject.Parse(JsonString);
+                //loop through blog posts
+                foreach(JObject blogPost in jsonObj["blogPosts"])
+                {
+                    //get blog post id
+                    int blogPostId = blogPost["id"].ToObject<int>();
+                    //if blogId in json and blog post id are equal
+                    if (blogPostId == blogIdToAddComment)
+                    {
+                        //get comments array from json for that blog post
+                        JArray comments = (JArray)blogPost["comments"];
+                        //create new comment object
+                        Comment newComment = new Comment(name, date, emailAddress, message);
+                        System.Diagnostics.Debug.WriteLine("new comment: " + newComment.message);
+                        //add newComment to the com
+                        comments.Add(JToken.FromObject(newComment));
+                      
+                        System.Diagnostics.Debug.WriteLine("comments: " + comments.ToString());
+                    }
+                   
+                }
+
+                System.Diagnostics.Debug.WriteLine("comments: " + jsonObj.ToString());
+                
+                System.IO.File.WriteAllText(mapPath, jsonObj.ToString());
+
                 //redirect to the currently viewed blog post
                 return RedirectToAction("BlogContent", new { id = commentData["blogId"] });
-
-
             }
-            catch
+            catch(Exception e)
             {
-                return View();
+                System.Diagnostics.Debug.WriteLine("error occured" + e);
             }
+            return View();
         }
 
         
@@ -140,6 +167,22 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             {
                 return View();
             }
+        }
+    }
+
+    internal class Comment
+    {
+        public String name;
+        public DateTime date;
+        public String emailAddress;
+        public String message;
+
+        public Comment(String usersName, DateTime currentDate, String usersEmailAddress, String usersMessage)
+        {
+            name = usersName;
+            date = currentDate;
+            emailAddress = usersEmailAddress;
+            message = usersMessage;
         }
     }
 }
