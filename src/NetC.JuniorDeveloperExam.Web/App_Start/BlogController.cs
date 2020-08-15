@@ -44,29 +44,10 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     break;
                 }
             }
-            
+
             return View();
         }
 
-        //public ActionResult AddComment()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("add comment action");
-
-
-        //    return View("~/Views/BlogContent.cshtml");
-        //}
-
-        // GET: Blog/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Blog/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
 
         // POST: Blog/Create
         [HttpPost]
@@ -90,7 +71,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                 //json string --> JObject
                 JObject jsonObj = JObject.Parse(JsonString);
                 //loop through blog posts
-                foreach(JObject blogPost in jsonObj["blogPosts"])
+                foreach (JObject blogPost in jsonObj["blogPosts"])
                 {
                     //get blog post id
                     int blogPostId = blogPost["id"].ToObject<int>();
@@ -108,7 +89,8 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                             //add newComment to the comment array
                             blogPost.Property("htmlContent").AddAfterSelf(new JProperty("comments", JToken.FromObject(comments)));
                             System.Diagnostics.Debug.WriteLine(blogPost.ToString());
-                        } else
+                        }
+                        else
                         {
                             //get comments array from json for that blog post
                             JArray comments = (JArray)blogPost["comments"];
@@ -117,12 +99,12 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                             System.Diagnostics.Debug.WriteLine("new comment: " + newComment.message);
                             //add newComment to the comment array
                             comments.Add(JToken.FromObject(newComment));
-                      
+
                             System.Diagnostics.Debug.WriteLine("comments: " + comments.ToString());
                         }
-                        
+
                     }
-                   
+
                 }
 
                 System.IO.File.WriteAllText(mapPath, jsonObj.ToString());
@@ -130,72 +112,27 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                 //redirect to the currently viewed blog post
                 return RedirectToAction("BlogContent", new { id = commentData["blogId"] });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("error occured" + e);
             }
             return View();
         }
 
-        
-        // GET: Blog/Edit/5
-        public ActionResult Edit(int id)
+        internal class Comment
         {
-            return View();
-        }
+            public String name;
+            public DateTime date;
+            public String emailAddress;
+            public String message;
 
-        // POST: Blog/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
+            public Comment(String usersName, DateTime currentDate, String usersEmailAddress, String usersMessage)
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                name = usersName;
+                date = currentDate;
+                emailAddress = usersEmailAddress;
+                message = usersMessage;
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Blog/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Blog/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
-
-    internal class Comment
-    {
-        public String name;
-        public DateTime date;
-        public String emailAddress;
-        public String message;
-
-        public Comment(String usersName, DateTime currentDate, String usersEmailAddress, String usersMessage)
-        {
-            name = usersName;
-            date = currentDate;
-            emailAddress = usersEmailAddress;
-            message = usersMessage;
         }
     }
 }
