@@ -8,6 +8,11 @@ namespace NetC.JuniorDeveloperExam.Web
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.MapRoute(
+                name: "addCommentDefault",
+                url: "AddComment",
+                defaults: new { controller = "Blog", action = "AddComment" }
+            );
 
             routes.MapRoute(
                 name: "addComment",
