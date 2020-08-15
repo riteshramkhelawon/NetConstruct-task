@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Media;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -111,6 +113,25 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                 return View();
             }
         }
+
+        [HttpPost]
+        public Boolean checkEmail()
+        {
+            var emailAddress = Request["emailAddress"];
+            System.Diagnostics.Debug.WriteLine("EMAIL - " + emailAddress);
+            Boolean isValidEmail = true;
+            //check regex
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(emailAddress);
+
+            if (!match.Success)
+            {
+                isValidEmail = false;
+            }
+
+            return isValidEmail;
+        }
+
 
         public JObject getBlogPostJsonObject()
         {

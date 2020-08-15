@@ -29,6 +29,7 @@
                         <div class="form-group col-md-6">
                             <label for="EmailAddress">Email Address</label>
                             <input type="email" class="form-control" name="emailAddress" id="emailAddress" placeholder="Your email address" required>
+                            <p class="text-danger" id="emailMessage" style="visibility: hidden">This email address is not valid</p>
                         </div>
                     </div>
 
@@ -36,7 +37,7 @@
                         <label for="Message">Message</label>
                         <textarea placeholder="What's your thoughts?" name="message" id="message" class="form-control" rows="3" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                    <button id="submitCommentBtn" type="submit" class="btn btn-primary">Post Comment</button>
                     <input type="hidden" name="blogId" id="blogID" value="@ViewBag.blogID" />
                 </form>
             </div>
@@ -68,6 +69,44 @@
     {
         <h1>Sorry, this blog was not found</h1>
     }
-</body>
-    
+
+    <script>
+        //setup before functions
+        var typingTimer;                //timer identifier
+        var doneTypingInterval = 2000;  //time in ms (5 seconds)
+
+        //on keyup, start the countdown
+        $('#emailAddress').keyup(function () {
+            clearTimeout(typingTimer);
+            if ($('#emailAddress').val()) {
+                typingTimer = setTimeout(doneTyping, doneTypingInterval);
+            }
+        });
+
+        //user is "finished typing," do something
+        function doneTyping() {
+            console.log($('#emailAddress').val())
+            $.ajax({
+                url: '/checkEmail',
+                type: 'POST',
+                data: { emailAddress: $('#emailAddress').val() },
+                success: function (validEmailAddress) {
+                    console.log(validEmailAddress);
+                    if (validEmailAddress == "False") {
+                        $('#emailMessage').css('visibility', 'visible');
+                        $('#submitCommentBtn').attr('disabled', 'true');
+                    } else {
+                        $('#emailMessage').css('visibility', 'hidden');
+                        $('#submitCommentBtn').removeAttr('disabled');
+                    }
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        }
+
+        
+    </script>
+</body>    
 
