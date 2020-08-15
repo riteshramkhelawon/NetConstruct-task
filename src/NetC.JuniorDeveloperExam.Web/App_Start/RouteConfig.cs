@@ -9,23 +9,11 @@ namespace NetC.JuniorDeveloperExam.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            //routes.MapRoute(
-            //    name: "default",
-            //    url: "{controller}/{action}/{id}",
-            //    defaults: new { controller = "Blog", action = "BlogContent", id = "1" }
-            //);
-
             routes.MapRoute(
                 name: "addComment",
                 url: "blog/AddComment",
                 defaults: new { controller = "Blog", action = "AddComment"}
             );
-
-            //routes.MapRoute(
-            //    name: "home",
-            //    url: "",
-            //    defaults: new { controller = "blog", action = "blogcontent", id = 1 }
-            //);
 
             routes.MapRoute(
                 name: "blogContent",
@@ -33,6 +21,11 @@ namespace NetC.JuniorDeveloperExam.Web
                 defaults: new { controller = "Blog", action = "BlogContent", id = UrlParameter.Optional }
             );
 
+            routes.MapRoute(
+                name: "default",
+                url: "",
+                defaults: new { controller = "blog", action = "blogcontent", id = 1 }
+            );
         }
     }
 }
