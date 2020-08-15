@@ -14,26 +14,22 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
         // GET: Blog
         public ActionResult BlogContent()
         {
-           
             //get the blog id from the url (in 32-bit integer format)
             var urlBlogID = Convert.ToInt32(Url.RequestContext.RouteData.Values["id"]);
-            //get the directory of blog posts JSON file
-            var mapPath = Server.MapPath("~/App_Data/Blog-Posts.json");
-            //json file as string
-            var JsonString = System.IO.File.ReadAllText(mapPath);
-            //string to object
-            JObject blogPosts = JObject.Parse(JsonString);
 
-            //loop through each object in the JSON Object
+            //get blog post details from JSON file as a JObject
+            JObject blogPosts = getBlogPostJsonObject();
+
+            //loop through each object in the blogPosts JObject
             foreach (JObject blog in blogPosts["blogPosts"])
             {
-                //convert JValue to integer
-                int blogId = blog["id"].ToObject<int>();
+                //convert current blogId(JToken) to an integer
+                int currentBlogId = convertIdToInteger(blog["id"]);
 
-                //if id in the url matches the current blogId, get blog details
-                if (blogId == urlBlogID)
+                //if the id in the url matches the current blogId in the loop
+                if (urlBlogID == currentBlogId)
                 {
-                    //get details from appropriate blog entry [MAKE THESE INTO A SINGLE OBJECT]
+                    //get details from appropriate blog entry and add these to the ViewBag [MAKE THESE INTO A SINGLE OBJECT]
                     ViewBag.blogID = urlBlogID;
                     ViewBag.date = blog["date"];
                     ViewBag.title = blog["title"];
@@ -47,7 +43,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             return View();
         }
 
-        // POST: Blog/Create
+        // POST: Blog/AddComment
         [HttpPost]
         public ActionResult AddComment(FormCollection commentData)
         {
@@ -58,46 +54,49 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             String message = commentData["message"];
             int blogIdToAddComment = Int32.Parse(commentData["blogId"]);
 
+            //create new comment object with comment details
+            Comment newComment = new Comment(name, date, emailAddress, message);
+
             try
             {
-                //get the directory of blog posts JSON file
-                var mapPath = Server.MapPath("~/App_Data/Blog-Posts.json");
-                //json file as string
-                var JsonString = System.IO.File.ReadAllText(mapPath);
-                //json string --> JObject
-                JObject jsonObj = JObject.Parse(JsonString);
-                //loop through blog posts
-                foreach (JObject blogPost in jsonObj["blogPosts"])
+                //get blog post details from JSON file as a JObject
+                JObject blogPosts = getBlogPostJsonObject();
+
+                //loop through each object in the blogPosts JObject
+                foreach (JObject blog in blogPosts["blogPosts"])
                 {
-                    //get blog post id
-                    int blogPostId = blogPost["id"].ToObject<int>();
-                    //if blogId in json and blog post id are equal
-                    if (blogPostId == blogIdToAddComment)
+                    //get the current blog post id(JToken) as an integer
+                    int currentBlogPostId = convertIdToInteger(blog["id"]);
+
+                    //if the blogId to add the comment to is equal to the current blogId in the loop
+                    if (blogIdToAddComment == currentBlogPostId)
                     {
-                        if ((JArray)blogPost["comments"] == null)
+                        //if there are already existing comments for this blog post
+                        if ((JArray)blog["comments"] != null)
                         {
-                            //create new comment object
-                            Comment newComment = new Comment(name, date, emailAddress, message);
-                            //create array with the new comment as an element
-                            Comment[] comments = new Comment[] { newComment };
-                            //add newComment to the comment array
-                            blogPost.Property("htmlContent").AddAfterSelf(new JProperty("comments", JToken.FromObject(comments)));
-                        }
-                        else
-                        {
-                            //get comments array from json for that blog post
-                            JArray comments = (JArray)blogPost["comments"];
-                            //create new comment object
-                            Comment newComment = new Comment(name, date, emailAddress, message);
-                            //add newComment to the comment array
+                            //get comments array from the blog(JObject) for that blog post
+                            JArray comments = (JArray)blog["comments"];
+
+                            //add the new comment to the exiting comment array
                             comments.Add(JToken.FromObject(newComment));
                         }
+                        //if there are no existing comments for this blog post
+                        else
+                        {
+                            //create an array with the new comment as an element
+                            Comment[] comments = new Comment[] { newComment };
 
+                            //add the new comment array as a property of the current blog(JObject)
+                            blog.Property("htmlContent").AddAfterSelf(new JProperty("comments", JToken.FromObject(comments)));
+                        }
+
+                        break;
                     }
 
                 }
 
-                System.IO.File.WriteAllText(mapPath, jsonObj.ToString());
+                //overwrite blog posts JSON file with the new JSON object
+                saveJsonFile(blogPosts);
 
                 //redirect to the currently viewed blog post
                 return RedirectToAction("BlogContent", new { id = commentData["blogId"] });
@@ -105,9 +104,41 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("error occured" + e);
+                return View();
             }
-            return View();
         }
+
+        public JObject getBlogPostJsonObject()
+        {
+            //get the path of blog posts JSON file
+            var mapPath = Server.MapPath("~/App_Data/Blog-Posts.json");
+
+            //get JSON file as a string
+            var JsonString = System.IO.File.ReadAllText(mapPath);
+
+            //Parse string as JObject
+            JObject blogPosts = JObject.Parse(JsonString);
+
+            return blogPosts;
+        }
+
+        public void saveJsonFile(JObject newJsonObject)
+        {
+            //get the path of blog posts JSON file
+            var mapPath = Server.MapPath("~/App_Data/Blog-Posts.json");
+
+            //Write new JSON object to the blogPosts Json file
+            System.IO.File.WriteAllText(mapPath, newJsonObject.ToString());
+        }
+
+        public int convertIdToInteger(JToken id)
+        {
+            //convert JToken to integer
+            int integerId = id.ToObject<int>();
+
+            return integerId;
+        }
+
 
         internal class Comment
         {
