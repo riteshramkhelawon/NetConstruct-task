@@ -73,14 +73,23 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
         public ActionResult AddComment(FormCollection commentData)
         {
             System.Diagnostics.Debug.WriteLine("add comment action");
-            System.Diagnostics.Debug.WriteLine("name: " + commentData["name"]);
+
+            //get user inputs from the comment form
+            String name = commentData["name"];
+            DateTime date = DateTime.Now;
+            String emailAddress = commentData["emailAddress"];
+            String message = commentData["message"];
+
             try
             {
-                
-
-
+                System.Diagnostics.Debug.WriteLine("name: " + name);
+                System.Diagnostics.Debug.WriteLine("date: " + date.ToString());
+                System.Diagnostics.Debug.WriteLine("email: " + emailAddress);
+                System.Diagnostics.Debug.WriteLine("msg: " + message);
                 //redirect to the currently viewed blog post
                 return RedirectToAction("BlogContent", new { id = commentData["blogId"] });
+
+
             }
             catch
             {
@@ -88,6 +97,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             }
         }
 
+        
         // GET: Blog/Edit/5
         public ActionResult Edit(int id)
         {
