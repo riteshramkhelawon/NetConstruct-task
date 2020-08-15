@@ -9,6 +9,18 @@ namespace NetC.JuniorDeveloperExam.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapRoute(
+                name: "checkEmailDefault",
+                url: "checkEmail",
+                defaults: new { controller = "Blog", action = "checkEmail" }
+            );
+
+            routes.MapRoute(
+                name: "checkEmail",
+                url: "blog/checkEmail",
+                defaults: new { controller = "Blog", action = "checkEmail" }
+            );
+
+            routes.MapRoute(
                 name: "addCommentDefault",
                 url: "AddComment",
                 defaults: new { controller = "Blog", action = "AddComment" }
