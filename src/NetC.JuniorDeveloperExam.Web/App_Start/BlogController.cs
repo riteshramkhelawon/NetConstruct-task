@@ -74,8 +74,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     //if the blogId to add the comment to is equal to the current blogId in the loop
                     if (blogIdToAddComment == currentBlogPostId)
                     {
-
-                        //get comments array from the blog(JObject) for that blog post
+                        //get comments array for that blog post
                         JArray comments = (JArray)blog["comments"];
 
                         //generate new comment id
@@ -83,7 +82,6 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
 
                         //create new comment object with comment details
                         Comment newComment = new Comment(newCommentId, name, date, emailAddress, message);
-
 
                         //if there are already existing comments for this blog post
                         if (comments != null)
@@ -129,16 +127,13 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             int blogIdToAddReply = Int32.Parse(replyData["blogId"]);
             int commentId = Int32.Parse(replyData["commentId"]);
 
-            System.Diagnostics.Debug.WriteLine("add reply to blog " + blogIdToAddReply + " for comment " + commentId + "\n" +
-                name + "\n" + date + "\n" + emailAddress + "\n" + message);
-            
             //create new comment object for the reply
-            Comment commentReply = new Comment(1, name, date, emailAddress, message);
+            Comment reply = new Comment(1, name, date, emailAddress, message);
 
-            //get json as object from file
+            //get blog post details from JSON file as a JObject
             JObject blogPosts = getBlogPostJsonObject();
 
-            //loop through blogPosts to find appropriate blog
+            //loop through blogPosts to find the appropriate blog
             foreach(JObject blog in blogPosts["blogPosts"])
             {
                 //get the current blog post id(JToken) as an integer
@@ -147,35 +142,31 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                 //if the blog id to add the reply to, is the same as the current blogId in the loop
                 if (blogIdToAddReply == currentBlogPostId)
                 {
-                    //get comments array from the blog(JObject) for that blog post
+                    //get comments array for that blog post
                     JArray comments = (JArray)blog["comments"];
 
+                    //loop through each comment object in the comments aray
                     foreach (JObject comment in comments)
                     {
                         //get the current blog post id(JToken) as an integer
                         int currentCommentId = convertIdToInteger(comment["id"]);
                         
-                        //if comment id to add reply to, is the same as the current comment id in the loop
+                        //if the comment id to add the reply to, is the same as the current comment id in the loop
                         if (commentId == currentCommentId)
                         {
-                            //add the new comment array as a property of the current blog(JObject)
-                            comment.Property("message").AddAfterSelf(new JProperty("reply", JToken.FromObject(commentReply)));
-                            System.Diagnostics.Debug.WriteLine("comment - " + comment.ToString());
+                            //create new property 'reply' in the comment object and add the reply as it's value
+                            comment.Property("message").AddAfterSelf(new JProperty("reply", JToken.FromObject(reply)));
                         }
                     }
                 }
             }
 
-            //save new json file
+            //overwrite blog posts JSON file with the new JSON object
             saveJsonFile(blogPosts);
 
-            
-
+            //redirect to the currently viewed blog post
             return RedirectToAction("BlogContent", new { id = replyData["blogId"] });
         }
-
-
-
 
         [HttpPost]
         public Boolean checkEmail()
@@ -194,7 +185,6 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
 
             return isValidEmail;
         }
-
 
         public JObject getBlogPostJsonObject()
         {
