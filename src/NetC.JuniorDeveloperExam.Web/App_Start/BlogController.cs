@@ -116,7 +116,56 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
 
         public ActionResult addCommentReply(FormCollection replyData)
         {
-            System.Diagnostics.Debug.WriteLine("add reply - "+replyData["blogId"]);
+            //get user inputs from the reply form
+            String name = replyData["replyName"];
+            DateTime date = DateTime.Now;
+            String emailAddress = replyData["replyEmailAddress"];
+            String message = replyData["replyMessage"];
+            int blogIdToAddReply = Int32.Parse(replyData["blogId"]);
+            int commentId = Int32.Parse(replyData["commentId"]);
+
+            System.Diagnostics.Debug.WriteLine("add reply to blog " + blogIdToAddReply + " for comment " + commentId + "\n" +
+                name + "\n" + date + "\n" + emailAddress + "\n" + message);
+            
+            //create new comment object for the reply
+            Comment commentReply = new Comment(name, date, emailAddress, message);
+
+            //get json as object from file
+            JObject blogPosts = getBlogPostJsonObject();
+
+            //loop through blogPosts to find appropriate blog
+            foreach(JObject blog in blogPosts["blogPosts"])
+            {
+                //get the current blog post id(JToken) as an integer
+                int currentBlogPostId = convertIdToInteger(blog["id"]);
+
+                //if the blog id to add the reply to, is the same as the current blogId in the loop
+                if (blogIdToAddReply == currentBlogPostId)
+                {
+                    //get comments array from the blog(JObject) for that blog post
+                    JArray comments = (JArray)blog["comments"];
+
+                    foreach (JObject comment in comments)
+                    {
+                        //get the current blog post id(JToken) as an integer
+                        int currentCommentId = convertIdToInteger(comment["id"]);
+                        
+                        //if comment id to add reply to, is the same as the current comment id in the loop
+                        if (commentId == currentCommentId)
+                        {
+                            //add the new comment array as a property of the current blog(JObject)
+                            comment.Property("message").AddAfterSelf(new JProperty("reply", JToken.FromObject(commentReply)));
+                            System.Diagnostics.Debug.WriteLine("comment - " + comment.ToString());
+                        }
+                    }
+                }
+            }
+
+            //save new json file
+            saveJsonFile(blogPosts);
+
+            
+
             return RedirectToAction("BlogContent", new { id = replyData["blogId"] });
         }
 

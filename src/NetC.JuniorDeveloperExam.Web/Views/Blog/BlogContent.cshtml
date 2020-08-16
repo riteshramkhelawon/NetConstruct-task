@@ -53,7 +53,7 @@
             foreach (var comment in ViewBag.comments)
             {
                 <div class="media mb-4">
-                    <img class="d-flex mr-3 rounded-circle user-avatar" src="" alt=@comment.name>
+                    <img class="d-flex mr-3 rounded-circle user-avatar" src="" alt=@comment.id>
                     <div class="media-body">
                         <h5 class="mt-0"><strong>@comment.name</strong><small><em> (@String.Format("{0:d MMMM yyyy}", @comment.date) at @comment.date.ToString("HH:mm")) </em></small></h5>
                         @comment.message
@@ -75,10 +75,11 @@
                         </div>
                         <div class="form-group">
                             <label for="Message">Message</label>
-                            <textarea placeholder="Your reply" name="commentReply" id="commentReply" class="form-control" rows="1" required></textarea>
+                            <textarea placeholder="Your reply" name="replyMessage" id="replyMessage" class="form-control" rows="1" required></textarea>
                         </div>
                         <button id="submitCommentBtn" type="submit" class="btn btn-outline-secondary">Post Reply</button>
                         <input type="hidden" name="blogId" id="blogID" value="@ViewBag.blogID" />
+                        <input type="hidden" name="commentId" id="commentId" value="@comment.id" />
                     </form>
                 </div>
                 <hr />
