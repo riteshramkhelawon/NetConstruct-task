@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Assets\Scripts\emailValidation.js" />
     <Content Include="Assets\Scripts\unobtrusive-bootstrap.js" />
     <Content Include="Assets\Styles\bootstrap.min.css" />
     <Content Include="Assets\Styles\custom.css" />

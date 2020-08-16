@@ -58,24 +58,25 @@
                         <h5 class="mt-0"><strong>@comment.name</strong><small><em> (@String.Format("{0:d MMMM yyyy}", @comment.date) at @comment.date.ToString("HH:mm")) </em></small></h5>
                         @comment.message
                     </div>
+                    <!-- Show Reply Button if No Current Reply Exists for This Comment -->
                     @if (comment.reply == null)
                     {
                         <button onclick="$('#replyForm-@i').slideToggle();" id="replyBtn-@i" class="btn btn-sm btn-outline-dark" type="button">Reply</button>
                     }
                 </div>
 
+                <!-- Comment Replies -->
                 if (comment.reply != null)
                 {
                     <div class="media ml-5 mr-5 mb-1 mt-1">
-                        <div class="media-body">
+                        <div class="rounded p-3 bg-light media-body">
                             <h5 class="mt-0"><small><strong>Reply from @comment.reply.name</strong><em> (@String.Format("{0:d MMMM yyyy}", @comment.reply.date) at @comment.reply.date.ToString("HH:mm"))</em></small></h5>
                             <p class="text-secondary">@comment.reply.message</p>
                         </div>
                     </div>
                 }
 
-
-
+                <!-- Comment Reply Form-->
                 <div style="display:none" class="mb-2 m-5" id="replyForm-@i">
                     <form method="post" action="addCommentReply">
                         <div class="form-row">
@@ -104,53 +105,16 @@
         }
         else
         {
+            <!-- No Existing Comments for Blog -->
             <p>There are no comments yet</p>
         }
     }
     else
     {
+        <!-- Blog Not Found -->
         <h1>Sorry, this blog was not found</h1>
     }
 
-    <script>
-        //setup before functions
-        var typingTimer;                //timer identifier
-        var doneTypingInterval = 1000;  //time in ms (5 seconds)
-
-        //on keyup, start the countdown
-        $('#emailAddress').keyup(function () {
-            clearTimeout(typingTimer);
-            if ($('#emailAddress').val()) {
-                typingTimer = setTimeout(doneTyping, doneTypingInterval);
-            }
-        });
-
-
-
-        //user is "finished typing," do something
-        function doneTyping() {
-            console.log($('#emailAddress').val())
-            $.ajax({
-                url: '/checkEmail',
-                type: 'POST',
-                data: { emailAddress: $('#emailAddress').val() },
-                success: function (validEmailAddress) {
-                    console.log(validEmailAddress);
-                    if (validEmailAddress == "False") {
-                        $('#emailMessage').css('display', 'block');
-                        $('#submitCommentBtn').attr('disabled', 'true');
-                    } else {
-                        $('#emailMessage').css('display', 'none');
-                        $('#submitCommentBtn').removeAttr('disabled');
-                    }
-                },
-                error: function (error) {
-                    alert(error);
-                }
-            });
-        }
-
-
-    </script>
+    <script src="../../Assets/Scripts/emailValidation.js"></script>
 </body>    
 
