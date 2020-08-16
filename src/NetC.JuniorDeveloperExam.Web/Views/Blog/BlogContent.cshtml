@@ -58,8 +58,23 @@
                         <h5 class="mt-0"><strong>@comment.name</strong><small><em> (@String.Format("{0:d MMMM yyyy}", @comment.date) at @comment.date.ToString("HH:mm")) </em></small></h5>
                         @comment.message
                     </div>
-                    <button onclick="$('#replyForm-@i').slideToggle();" id="replyBtn-@i" class="btn btn-sm btn-outline-dark" type="button">Reply</button>
+                    @if (comment.reply == null)
+                    {
+                        <button onclick="$('#replyForm-@i').slideToggle();" id="replyBtn-@i" class="btn btn-sm btn-outline-dark" type="button">Reply</button>
+                    }
                 </div>
+
+                if (comment.reply != null)
+                {
+                    <div class="media ml-5 mr-5 mb-1 mt-1">
+                        <div class="media-body">
+                            <h5 class="mt-0"><small><strong>Reply from @comment.reply.name</strong><em> (@String.Format("{0:d MMMM yyyy}", @comment.reply.date) at @comment.reply.date.ToString("HH:mm"))</em></small></h5>
+                            <p class="text-secondary">@comment.reply.message</p>
+                        </div>
+                    </div>
+                }
+
+
 
                 <div style="display:none" class="mb-2 m-5" id="replyForm-@i">
                     <form method="post" action="addCommentReply">
