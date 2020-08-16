@@ -60,9 +60,6 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
             String message = commentData["message"];
             int blogIdToAddComment = Int32.Parse(commentData["blogId"]);
 
-            //create new comment object with comment details
-            Comment newComment = new Comment(name, date, emailAddress, message);
-
             try
             {
                 //get blog post details from JSON file as a JObject
@@ -77,12 +74,20 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     //if the blogId to add the comment to is equal to the current blogId in the loop
                     if (blogIdToAddComment == currentBlogPostId)
                     {
-                        //if there are already existing comments for this blog post
-                        if ((JArray)blog["comments"] != null)
-                        {
-                            //get comments array from the blog(JObject) for that blog post
-                            JArray comments = (JArray)blog["comments"];
 
+                        //get comments array from the blog(JObject) for that blog post
+                        JArray comments = (JArray)blog["comments"];
+
+                        //generate new comment id
+                        int newCommentId = comments != null ? comments.Count + 1 : 1;
+
+                        //create new comment object with comment details
+                        Comment newComment = new Comment(newCommentId, name, date, emailAddress, message);
+
+
+                        //if there are already existing comments for this blog post
+                        if (comments != null)
+                        {
                             //add the new comment to the exiting comment array
                             comments.Add(JToken.FromObject(newComment));
                         }
@@ -90,10 +95,10 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                         else
                         {
                             //create an array with the new comment as an element
-                            Comment[] comments = new Comment[] { newComment };
+                            Comment[] commentsArray = new Comment[] { newComment };
 
                             //add the new comment array as a property of the current blog(JObject)
-                            blog.Property("htmlContent").AddAfterSelf(new JProperty("comments", JToken.FromObject(comments)));
+                            blog.Property("htmlContent").AddAfterSelf(new JProperty("comments", JToken.FromObject(commentsArray)));
                         }
 
                         break;
@@ -128,7 +133,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                 name + "\n" + date + "\n" + emailAddress + "\n" + message);
             
             //create new comment object for the reply
-            Comment commentReply = new Comment(name, date, emailAddress, message);
+            Comment commentReply = new Comment(1, name, date, emailAddress, message);
 
             //get json as object from file
             JObject blogPosts = getBlogPostJsonObject();
@@ -225,13 +230,15 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
 
         internal class Comment
         {
+            public int id;
             public String name;
             public DateTime date;
             public String emailAddress;
             public String message;
 
-            public Comment(String usersName, DateTime currentDate, String usersEmailAddress, String usersMessage)
+            public Comment(int newId, String usersName, DateTime currentDate, String usersEmailAddress, String usersMessage)
             {
+                id = newId;
                 name = usersName;
                 date = currentDate;
                 emailAddress = usersEmailAddress;
