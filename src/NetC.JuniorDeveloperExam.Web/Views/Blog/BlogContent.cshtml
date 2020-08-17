@@ -58,7 +58,7 @@
                         <h5 class="mt-0"><strong>@comment.name</strong><small><em> (@String.Format("{0:d MMMM yyyy}", @comment.date) at @comment.date.ToString("HH:mm")) </em></small></h5>
                         @comment.message
                     </div>
-                    <!-- Show Reply Button if No Current Reply Exists for This Comment -->
+                    <!-- Show reply button if no current reply exists for this comment -->
                     @if (comment.reply == null)
                     {
                         <button onclick="$('#replyForm-@i').slideToggle();" id="replyBtn-@i" class="btn btn-sm btn-outline-dark" type="button">Reply</button>
@@ -106,7 +106,7 @@
         }
         else
         {
-            <!-- No Existing Comments for Blog -->
+            <!-- No existing comments for blog -->
             <p>There are no comments yet</p>
         }
     }

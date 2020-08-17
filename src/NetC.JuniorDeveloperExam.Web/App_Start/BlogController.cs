@@ -16,8 +16,11 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
         // GET: Blog
         public ActionResult BlogContent()
         {
-            //get the blog id from the url (in 32-bit integer format)
-            var urlBlogID = Convert.ToInt32(Url.RequestContext.RouteData.Values["id"]);
+            //get the blog id from the url (in integer format)
+            //check if id parameter in url is an integer
+            //if so, convert to int
+            //if not, use blog id 1 as default blog id
+            var urlBlogID = (int.TryParse(Url.RequestContext.RouteData.Values["id"].ToString(), out int isUrlBlogIdNumeric) != false) ? isUrlBlogIdNumeric : 1;
 
             //get blog post details from JSON file as a JObject
             JObject blogPosts = getBlogPostJsonObject();
@@ -31,7 +34,7 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                 //if the id in the url matches the current blogId in the loop
                 if (urlBlogID == currentBlogId)
                 {
-                    //get details from appropriate blog entry and add these to the ViewBag [MAKE THESE INTO A SINGLE OBJECT]
+                    //get details from appropriate blog entry and add these to the ViewBag for use in the view
                     ViewBag.blogID = urlBlogID;
                     ViewBag.date = blog["date"];
                     ViewBag.title = blog["title"];
@@ -145,13 +148,13 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
                     //get comments array for that blog post
                     JArray comments = (JArray)blog["comments"];
 
-                    //loop through each comment object in the comments aray
+                    //loop through each comment object in the comments array
                     foreach (JObject comment in comments)
                     {
                         //get the current blog post id(JToken) as an integer
                         int currentCommentId = convertIdToInteger(comment["id"]);
                         
-                        //if the comment id to add the reply to, is the same as the current comment id in the loop
+                        //if the comment id to add the reply to is the same as the current comment id in the loop
                         if (commentId == currentCommentId)
                         {
                             //create new property 'reply' in the comment object and add the reply as it's value
@@ -171,15 +174,18 @@ namespace NetC.JuniorDeveloperExam.Web.App_Start
         [HttpPost]
         public Boolean checkEmail()
         {
+            //get email address input from the user
             var emailAddress = Request["emailAddress"];
-            System.Diagnostics.Debug.WriteLine("EMAIL - " + emailAddress);
+            
             Boolean isValidEmail = true;
-            //check regex
+
+            //check the email address against the regex to see if it matches the correct format
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
             Match match = regex.Match(emailAddress);
 
             if (!match.Success)
             {
+                //if the email address is not in the correct format
                 isValidEmail = false;
             }
 
