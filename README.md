@@ -10,6 +10,6 @@ To run the application, please load the project into Microsoft Visual Studio and
 - Ability to reply to comments and save these appropriately in the Blog-Posts.json file
 
 ## Extras:
-- Use of ajax and JQuery for email validation (server-side)
+- Use of ajax and JQuery for email validation
 - Use of Bootstrap classes for responsive layout
 - Use of a github repo to deliver the assessment
