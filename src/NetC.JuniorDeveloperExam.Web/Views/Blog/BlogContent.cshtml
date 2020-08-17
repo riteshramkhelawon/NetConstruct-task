@@ -53,7 +53,7 @@
             foreach (var comment in ViewBag.comments)
             {
                 <div class="media mb-4">
-                    <img class="d-flex mr-3 rounded-circle user-avatar" src="" alt=@comment.id>
+                    <img class="d-flex mr-3 rounded-circle user-avatar" src="https://eu.ui-avatars.com/api/?name=@comment.name" alt=@comment.name>
                     <div class="media-body">
                         <h5 class="mt-0"><strong>@comment.name</strong><small><em> (@String.Format("{0:d MMMM yyyy}", @comment.date) at @comment.date.ToString("HH:mm")) </em></small></h5>
                         @comment.message
@@ -68,8 +68,9 @@
                 <!-- Comment Replies -->
                 if (comment.reply != null)
                 {
-                    <div class="media ml-5 mr-5 mb-1 mt-1">
-                        <div class="rounded p-3 bg-light media-body">
+                    <div class="media bg-light rounded mx-5 pl-2">
+                        <img class="d-flex mt-auto mb-auto rounded-circle user-avatar" src="https://eu.ui-avatars.com/api/?name=@comment.reply.name" alt=@comment.reply.name>
+                        <div class="media-body p-3">
                             <h5 class="mt-0"><small><strong>Reply from @comment.reply.name</strong><em> (@String.Format("{0:d MMMM yyyy}", @comment.reply.date) at @comment.reply.date.ToString("HH:mm"))</em></small></h5>
                             <p class="text-secondary">@comment.reply.message</p>
                         </div>
